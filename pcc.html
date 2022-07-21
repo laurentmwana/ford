@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/ford.css">
+    <title>ford - accueil</title>
+</head>
+<body>
+    <!-- nav -->
+    <div class="nav">
+        <ul>
+            <li><a href="index.html">Documentation</a></li>
+            <li><a href="about.html" >A propos</a></li>
+            <li><a href="pcc.html" class="active">Trouver le PCC</a></li>
+        </ul>
+    </div>
+    <!-- end nav -->
+    <!-- content -->
+    <div class="content">
+        <!-- container -->
+        <div class="container">
+            <h1 class="container-title"> Trouver le PCC</h1>
+
+            <form action="" method="get" class="form">
+                <div class="blog-row">
+                    <div class="blog-field">
+                        <label for="name" class="field-label">Graphe de taille </label>
+                        <input type="number" name="name" id="name" class="field" placeholder="entrer un nom ">
+                        <div class="message-field"></div>
+                    </div>
+                    <div class="blog-field">
+                        <label for="name" class="field-label">Les noms de sommets </label>
+                        <select name="field" id="field" class="field">
+                            <option value="">Alphabet</option>
+                            <option value="">Numéroter</option>
+                            <option value="">Par de nom </option>
+                        </select>
+                        <div class="message-field"></div>
+                    </div>
+                    <div class="blog-field">
+                        <label for="name" class="field-label">Styles </label>
+                        <select name="field" id="field" class="field">
+                            <option value="">Carrée</option>
+                            <option value="">Rectangle</option>
+                            <option value="">Circle</option>
+                        </select>
+                        <div class="message-field"></div>
+                    </div>
+                </div>
+                <div class="blog-field">
+                    <label for="name" class="field-label">Graphe de taille : </label>
+                    <input type="text" name="name" id="name" class="field" placeholder="entrer un nom ">
+                    <div class="message-field"></div>
+                </div>
+
+                <button type="submit">valider</button>
+            </form>
+        </div>
+        <!-- end container --> 
+    </div>
+    <!-- end content -->
+
+</body>
+</html>
