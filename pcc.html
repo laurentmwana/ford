@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/css/ford.css">
+    <link rel="stylesheet" href="assets/vis/dist/vis.css">
+    
+    <script src="assets/vis/dist/vis.js"></script>
     <title>ford - accueil</title>
 </head>
 <body>
@@ -21,46 +24,73 @@
     <div class="content">
         <!-- container -->
         <div class="container">
-            <h1 class="container-title"> Trouver le PCC</h1>
-
-            <form action="" method="get" class="form">
-                <div class="blog-row">
-                    <div class="blog-field">
-                        <label for="name" class="field-label">Graphe de taille </label>
-                        <input type="number" name="name" id="name" class="field" placeholder="entrer un nom ">
-                        <div class="message-field"></div>
+            <h1 class="container-title"> Trouver le PCC </h1>
+            <p>Le plus court chemin avec algorithme de <strong>Ballman-Ford</strong></p>
+            <div class="adjust">
+                <div class="child">
+                    <h3>Taille du graphe</h3>
+                    <div class="adjust-field">
+                        <input type="text" class="field" placeholder="taille du graphe" id="N">
                     </div>
-                    <div class="blog-field">
-                        <label for="name" class="field-label">Les noms de sommets </label>
-                        <select name="field" id="field" class="field">
-                            <option value="">Alphabet</option>
-                            <option value="">Numéroter</option>
-                            <option value="">Par de nom </option>
-                        </select>
-                        <div class="message-field"></div>
-                    </div>
-                    <div class="blog-field">
-                        <label for="name" class="field-label">Styles </label>
-                        <select name="field" id="field" class="field">
-                            <option value="">Carrée</option>
-                            <option value="">Rectangle</option>
-                            <option value="">Circle</option>
-                        </select>
-                        <div class="message-field"></div>
-                    </div>
+                    <button id="add-node" onclick="addNode()">Ajouter</button>
                 </div>
-                <div class="blog-field">
-                    <label for="name" class="field-label">Graphe de taille : </label>
-                    <input type="text" name="name" id="name" class="field" placeholder="entrer un nom ">
-                    <div class="message-field"></div>
+                <div class="child">
+                    <h3> Racine</h3>
+                    <div class="adjust-field">
+                        <input type="text" class="field" placeholder="id" id="id-racine">
+                    </div>
+                    <button id="racine-node" onclick="Racine()"> est la source</button>
                 </div>
-
-                <button type="submit">valider</button>
-            </form>
+                <div class="child">
+                    <h3>Sommet</h3>
+                    <div class="adjust-field">
+                        <input type="text" class="field" placeholder="id" id="node-id">
+                    </div>
+                    <div class="adjust-field">
+                        <input type="text" class="field" placeholder="label" id="node-label">
+                    </div>
+                    <button id="update-node" type="button" onclick="updateNode()"> editer</button>
+                    <button id="delete-node" type="button" onclick="removeNode()">supprimer</button>
+                </div>
+                <div class="child">
+                    <h3> Arc</h3>
+                    <div class="adjust-field">
+                        <input type="text" class="field" placeholder="id" id="edge-id">
+                    </div>
+                    <div class="adjust-field">
+                        <input type="text" class="field" placeholder="de ..." id="edge-from">
+                    </div>
+                    <div class="adjust-field">
+                        <input type="text" class="field" placeholder="à ..." id="edge-to">
+                    </div>
+                    <div class="adjust-field">
+                        <input type="text" class="field" placeholder="valeur associée" id="value-assoc">
+                    </div>
+                   
+                    <button id="add-edge" onclick="addEdge()">Ajouter</button>
+                </div>
+                
+            </div>
+            <button class="sm">Trouver le PCC</button>
+            <div class="views">
+                <div class="view-node">
+                    <h4>Sommets : </h4>
+                    <pre id="nodes"></pre>
+                </div>
+                <div class="view-graphe" id="view-graphe"></div>
+                <div class="view-edge">
+                    <h4>Arc : </h4>
+                    <pre id="edges"></pre>
+                </div>
+            </div>
+            </div>
         </div>
         <!-- end container --> 
     </div>
     <!-- end content -->
 
+
+
+    <script src="./assets/js/ford.js"></script>
 </body>
 </html>
