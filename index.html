@@ -5,15 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/css/ford.css">
+    <link rel="stylesheet" href="assets/vis/dist/vis.css">
+    
+    <script src="assets/vis/dist/vis.js"></script>
     <title>ford - accueil</title>
 </head>
 <body>
     <!-- nav -->
     <div class="nav">
         <ul>
-            <li><a href="index.html" class="active">Documentation</a></li>
-            <li><a href="about.html">A propos</a></li>
-            <li><a href="pcc.html">Trouver le PCC</a></li>
+            <li><a href="index.html" class="active">Trouver le PCC</a></li>
+            <li><a href="about.html" >A propos</a></li>
         </ul>
     </div>
     <!-- end nav -->
@@ -21,42 +23,56 @@
     <div class="content">
         <!-- container -->
         <div class="container">
-            <h1 class="container-title"> Documentation</h1>
-            <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam assumenda aspernatur quis debitis mollitia ullam quibusdam, consequuntur, pariatur labore dolorum commodi similique totam ab, accusantium explicabo at et nulla. Nam?
-                Impedit fugit odit magni eum dignissimos optio tenetur voluptates? Corrupti labore molestias saepe officia libero. Ratione provident, eum quam quas dolor maiores, dolores consequuntur sunt, harum rerum minima ipsam vel?
-                Iste nostrum quasi exercitationem molestias aut quae distinctio aspernatur! Ipsam velit omnis obcaecati vero eligendi eum maxime nobis consequatur libero nam. Ratione voluptatem quisquam optio error explicabo expedita aliquid molestias!
-                Aspernatur, iure dolores? Eum veritatis aliquid laborum ex laudantium odit dignissimos minus! Odit aut quos voluptate nulla repellendus aperiam fugit harum rerum temporibus tenetur, accusamus esse voluptas minus illo unde.
-                Asperiores quidem culpa ipsum quod tempora perferendis dignissimos odit animi expedita, officia reiciendis facilis perspiciatis, atque reprehenderit rem aspernatur recusandae! Vitae quos veritatis voluptas vel quas ipsum sed, alias exercitationem!
-            </p>
-
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum facilis, accusamus mollitia exercitationem animi inventore? Doloremque adipisci deserunt, omnis, maxime iste, ratione possimus corrupti recusandae voluptate earum quam similique! Distinctio.
-                Labore hic, aliquam nihil magnam nulla fugiat vel, ducimus officiis, quasi earum laboriosam esse praesentium modi! Delectus beatae et sed inventore voluptas, repellendus assumenda alias perferendis fugit enim voluptate consectetur!
-                Saepe architecto cumque, doloribus ipsa nihil necessitatibus dolor eum modi provident quisquam distinctio porro laborum. Delectus magnam recusandae culpa velit id odit! Molestiae, nobis saepe fugiat sed recusandae eum vel.
-                <ul class="c-list">
-                    <li>Alphabet</li>
-                    <li>Numérotation</li>
-                    <li>Nommaclature</li>
-                </ul>
-
-                <div class="blog blog-primary">
-                    A ne pas faire Lorem ipsum dolor, sit amet consectetur adipisicing elit. Doloribus rem fugiat unde, odio cum natus maxime incidunt hic? Ex quisquam quidem quae recusandae autem blanditiis obcaecati optio nesciunt delectus cum.
-                    Itaque ex, deleniti saepe vel exercitationem natus ducimus quidem perspiciatis officiis modi unde alias voluptas at ipsa ratione pariatur eligendi earum consectetur odit. Recusandae minus dolor inventore nulla perferendis! Odit.
+            <h1 class="container-title"> Trouver le PCC </h1>
+            <p>Nom du sommet : <strong id="name-node">Ballman-Ford</strong></p>
+            <div class="adjust">
+                <div class="child" id="child-add">
+                    <h3>Taille du graphe</h3>
+                    <div class="adjust-field">
+                        <input type="text" class="field" placeholder="taille du graphe" id="create-node">
+                    </div>
+                    <button onclick="addNode()" id="add">Ajouter</button>
                 </div>
-                <div class="blog blog-error">
-                    A ne pas faire Lorem ipsum dolor, sit amet consectetur adipisicing elit. Doloribus rem fugiat unde, odio cum natus maxime incidunt hic? Ex quisquam quidem quae recusandae autem blanditiis obcaecati optio nesciunt delectus cum.
-                    Itaque ex, deleniti saepe vel exercitationem natus ducimus quidem perspiciatis officiis modi unde alias voluptas at ipsa ratione pariatur eligendi earum consectetur odit. Recusandae minus dolor inventore nulla perferendis! Odit.
+                <div class="child child-off" id="child-racine">
+                    <h3> Racine</h3>
+                    <div class="adjust-field">
+                        <input type="text" class="field" placeholder="nom du sommet" id="racine">
+                    </div>
+                    
+                    <button onclick="Racine()"> est la source</button>
                 </div>
-                <div class="blog blog-success">
-                    A ne pas faire Lorem ipsum dolor, sit amet consectetur adipisicing elit. Doloribus rem fugiat unde, odio cum natus maxime incidunt hic? Ex quisquam quidem quae recusandae autem blanditiis obcaecati optio nesciunt delectus cum.
-                    Itaque ex, deleniti saepe vel exercitationem natus ducimus quidem perspiciatis officiis modi unde alias voluptas at ipsa ratione pariatur eligendi earum consectetur odit. Recusandae minus dolor inventore nulla perferendis! Odit.
+                <div class="child child-off" id="child-arc">
+                    <h3> Arc </h3>
+                    <div class="adjust-field">
+                        <input type="text" class="field" placeholder="de ..." id="from">
+                    </div>
+                    <div class="adjust-field">
+                        <input type="text" class="field" placeholder="vers ..." id="to">
+                    </div>
+                    <div class="adjust-field">
+                        <input type="text" class="field" placeholder="valeur associée" id="value">
+                    </div>
+                    
+                    <button onclick="addEdge()"> relier</button>
                 </div>
-            </p>
+                
+            </div>
+            <button class="sm" onclick="Ford()">Trouver le PCC</button>
+            <div class="views">
+                <div class="view-pcc" id="view-pcc"></div>
+            </div>
+            <div class="views">
+                <div class="view-graphe" id="view-graphe"></div>
+            </div>
+            </div>
         </div>
         <!-- end container --> 
     </div>
     <!-- end content -->
 
+
+
+    <!-- <script src="./assets/js/ford.js"></script> -->
+    <script src="./assets/js/generate.js"></script>
 </body>
 </html>

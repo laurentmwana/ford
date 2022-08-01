@@ -218,6 +218,15 @@ p {
     box-shadow: 0 0 1px rgba(0, 0, 0, .30);
 }
 
+.adjust .child.child-off {
+    display: none;
+    opacity: 0;
+}
+
+.adjust .child.child-on {
+    display: initial;
+}
+
 .adjust .adjust-field {
     margin: 6px 2px;
     position: relative;
@@ -236,6 +245,7 @@ p {
     border: 1px solid var(--light);
     margin: 3px 0 ;
     transition:  border-color .20s ease-in;
+    width: 100%;
 }
 
 .adjust .field:focus {
@@ -325,7 +335,7 @@ button:hover {
 }
 
 
-
+/* 
 .visualisation {
     padding: 1rem;
     border: 1px solid rgba(125, 125, 125, .3);
@@ -334,7 +344,7 @@ button:hover {
     height: 600px;
     width: 70%;
 }
-
+ */
 
 .views {
     display: flex;
@@ -357,12 +367,21 @@ button:hover {
 }
 
 
+.views .view-pcc {
+    display: none;
+    background-color: var(--light);
+    border: 1px solid #d1d5d8;
+    width: 700px;
+    padding: 15px;
+    height: 350px;
+}
+
 .views .view-graphe {
     background-color: var(--light);
     border: 1px solid #d1d5d8;
-    width: 570px;
+    width: 900px;
     padding: 15px;
-    height: 500px;
+    height: 450px;
 }
 
 .views .view-edge pre,

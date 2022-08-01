@@ -38,33 +38,48 @@ const addNode = function () {
     alert("Le champs est obligatoire")
   } else {
 
-    try {
-      
-      nodes = new vis.DataSet()
-      edges = new vis.DataSet()
-      nodeCreate = []
-      nodeCheck =  []
-      nodeDelete = []
-      nodeUpdate = []
-      edgeArray = []
-      
+    
+    
+    if (isNaN(node)) {
+      alert("Ce n'est pas un nombre ")
+    }
 
-      for (let key = 1; key <= node; key++) {
-        let name = "S" + key
-        nodes.add({
-          id: key,
-          label: name,
-          source: false
-        })
-        nodeCreate[key] = name
-        nodeCheck.push(name)
+    else 
+    {
+      document.querySelectorAll(".child-off").forEach((e) => {
+        e.classList.remove("child-off")
+        e.classList.add("child-on")
+      })
+
+      try {
+        
+        nodes = new vis.DataSet()
+        edges = new vis.DataSet()
+        nodeCreate = []
+        nodeCheck =  []
+        nodeDelete = []
+        nodeUpdate = []
+        edgeArray = []
+        
+
+        for (let key = 1; key <= node; key++) {
+          let name = "S" + key
+          nodes.add({
+            id: key,
+            label: name,
+            source: false,
+            relate: false
+          })
+          nodeCreate[key] = name
+          nodeCheck.push(name)
+        }
+
+        change(nodes, edges)
+
+
+      } catch (error) {
+        alert(error)
       }
-
-      change(nodes, edges)
-
-
-    } catch (error) {
-      alert(error)
     }
 
   }
@@ -196,13 +211,11 @@ const addEdge = function () {
       errors.push("La valeur associée doit être un réel ")
     }
 
-
     // on a pas d'erreurs 
     if (errors.length == 0) {
-      let okFrom = false
-      let okTo = false
-      let alias = []
-      let racine = null
+
+      let okFrom = false, okTo = false, labelFrom = null, labelTo = null, racine = null
+
 
       for (let index = 0; index < nodes.get().length; index++) {
         const element = nodes.get()[index];
@@ -219,7 +232,6 @@ const addEdge = function () {
 
       else {
 
-        console.log(nodeY, racine);
         if (racine === nodeY) {
           
           alert(" On est peut pas retourner à la racine ")
@@ -240,18 +252,17 @@ const addEdge = function () {
 
               if (element.id == nodeX) {
                 okFrom = true
-                alias.push(element.label)
+                labelFrom = element.label
               }
 
             
               if (element.id == nodeY) {
                 okTo = true
-                alias.push(element.label)
+                labelTo = element.label
+
               }
 
               if (okFrom && okTo) {
-                alias.sort()
-                alias = alias.join('-')
                 break
               }
             }
@@ -273,17 +284,25 @@ const addEdge = function () {
                       exist = true
                       break
                     }
-                    
                   }
 
                   if (!exist) {
-                    edges.add({
-                      id: id,
-                      from: nodeX,
-                      to: nodeY,
-                      label: value,
-                      arrows: 'to',
-                    })
+                    try {
+                      edges.add({
+                        id: id,
+                        from: nodeX,
+                        to: nodeY,
+                        label: value,
+                        as: labelTo,
+                        arrows: 'to',
+                      })
+
+                      nodes.update({id: nodeX, relate: true})
+                      nodes.update({id: nodeY, relate: true})
+
+                    } catch (error) {
+                      console.log(error)
+                    }
                   } 
                   
                   else {
@@ -292,13 +311,23 @@ const addEdge = function () {
                 }
 
                 else {
-                  edges.add({
-                    id: id,
-                    from: nodeX,
-                    to: nodeY,
-                    label: value,
-                    arrows: 'to',
-                  })
+
+                  try {
+                    edges.add({
+                      id: id,
+                      from: nodeX,
+                      to: nodeY,
+                      label: value,
+                      as: labelTo,
+                      arrows: 'to',
+                    })
+
+                    
+                    nodes.update({id: nodeX, relate: true})
+                    nodes.update({id: nodeY, relate: true})
+                  } catch (error) {
+                    console.log(error)
+                  }
                 }
 
                 change(nodes, edges)
@@ -328,6 +357,177 @@ const addEdge = function () {
 
 }
 
+/**
+ * Supprimer un edge
+ */
+const removeEdge = function () {
+  
+  const id = document.querySelector('#edge-id').value
+
+  if (id == "") {
+    alert("Le champs id est vide")
+  }
+
+  else {
+    try {
+      edges.remove({id})
+      change(nodes, edges)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+
+
+
+/************    ALGORITHME DE FORD AVEC LE PCC           ********* */
+
+const Ford = function () {
+
+
+  // Les données
+  var nodeArrays = nodes.get()
+  var edgeArrays = edges.get()
+
+
+  // on vérifie qu'il y a pas des sommets isolé
+  let isoler = false
+
+
+  for (let index = 0; index < nodeArrays.length; index++) {
+    const element = nodeArrays[index];
+
+    if (element.relate === false) {
+      isoler = true
+      break
+    }
+  }
+
+
+  if (!isoler) {
+
+    // initialisation
+    let poids = []
+    let predecesseurs = []
+    let modifier = []
+    let check = []
+    let nodeOut = new vis.DataSet()
+
+    for (let i = 0; i < nodeArrays.length; i++) {
+        const node = nodeArrays[i];
+        if (node.source == true) {
+            poids[node.label] = 0
+        } 
+        else {
+          poids[node.label] = Infinity
+        }
+
+        predecesseurs[node.label] =  node.label;
+        modifier[node.label] =  false;
+        nodeOut.add({
+          id: (i + 1),
+          label: node.label
+        })
+    }
+
+    
+
+    console.log(predecesseurs);
+
+
+    // compteur d'iteration
+    var successeurs = []
+    var i = 0
+
+    // pour chaque sommet
+    while (i < nodeArrays.length) {
+      const node = nodeArrays[i];
+      successeurs[node.label] = null
+
+      // on cherche tous les successeurs i
+      for (let k = 0; k < edgeArrays.length; k++) {
+          const edge = edgeArrays[k];
+          // on vérifie que dans le tableau de liaison(des arc) il y a des successeur de i
+          // node.id !== edge.to pour le cas d'une boucle
+          if (node.id === edge.from && node.id !== edge.to) {
+              if (successeurs[node.label] === null) {
+                successeurs[node.label] = []
+              }
+
+              successeurs[node.label].push({
+                  to:edge.to,
+                  size: parseInt(edge.label),
+                  label: edge.as
+              })
+          }
+      }
+
+
+      // après avoir ajouter les successeurs de i
+      // on fait une vérification pour savoir s'il s'ait bien des successeurs de i
+      // tous les sommets auront le valeur null ~ à ensemble vide
+      if (successeurs[node.label] !== null) {
+          for (let j = 0; j < successeurs[node.label].length; j++) {
+              const successeur = successeurs[node.label][j];
+
+              // on compare la valeur i + la ponderation entre i et j(successeur) < au poids(j)
+              const valeur = (poids[node.label] + successeur.size) 
+              if (valeur < poids[successeur.label]) {
+                  // VRAI
+                  poids[successeur.label] = valeur
+                  predecesseurs[successeur.label] = node.label
+                  modifier[successeur.label] = true
+              } else {
+                  modifier[successeur.label] = false
+              }
+              
+              check[i] = modifier[successeur.label] 
+          }
+      }
+
+      i++; 
+
+      if (nodeArrays.length == i && check.includes(true)) {
+          i = 0
+      }
+    }
+
+
+
+    // resultats
+    let edgeOut = new vis.DataSet()
+    let identity = 1
+    
+    for (const key in predecesseurs) {
+
+      if(key !== predecesseurs[key]) {
+        
+        edgeOut.add({
+          id: identity,
+          from: key,
+          to: predecesseurs[key],
+          arrows: 'to'
+        })
+  
+        identity++
+      }
+      
+    }
+
+    
+
+
+    document.querySelector(".view-pcc").style.display = 'block'
+    changeResult(nodeOut, edgeOut)
+
+  }
+
+  else {
+    alert("Tous les sommets doivent avoir une rélation ")
+  }
+
+}
+/************ END ********* */
 
 /**
  * 
@@ -345,6 +545,17 @@ function change (nodes, edges) {
     edges:edges
   }, {});
 }
+
+
+function changeResult (nodes, edges) {
+  
+  var container = document.querySelector('#view-pcc');
+  return new vis.Network(container, {
+    nodes:nodes,
+    edges:edges
+  }, {});
+}
+
 
 /**
  * 
