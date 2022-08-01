@@ -430,7 +430,7 @@ const Ford = function () {
         })
     }
 
-    
+
 
     console.log(predecesseurs);
 
@@ -478,12 +478,15 @@ const Ford = function () {
                   predecesseurs[successeur.label] = node.label
                   modifier[successeur.label] = true
               } else {
-                  modifier[successeur.label] = false
+                modifier[successeur.label] = false
               }
               
               check[i] = modifier[successeur.label] 
           }
       }
+
+
+
 
       i++; 
 

@@ -194,6 +194,7 @@ function addEdge () {
 
 /******* DEBUT *****/
 function Ford () {
+    
 
     //  on vérifie qu'il n'y a pas des sommets isolés (donc des sommets qui n'ont pas de relation avec d'autres sommets )
     let relate = true
@@ -219,11 +220,17 @@ function Ford () {
 
         // tous les sommets sont réliés (donc tout est OK)
 
-
         // Initialisations (Etape 1)
         let poids = []
         let predecesseurs = []
         let modifier = []
+
+        // on commence toujours à la racine
+        let key = undefined
+        let racine = undefined
+
+        // tableau de successeurs
+        let successeurs = []
 
         // on initialise les poids de tous les sommets par  + infini
         // la racine par 0
@@ -234,8 +241,14 @@ function Ford () {
             // le poids
             if (node.source === true) {
                 poids[node.label] = 0
+
+                if (index !== 0) {
+                    racine = node
+                    key = index
+                }
+
             } else {
-                poids[node.label] = + Infinity
+                poids[node.label] = Infinity
             }
 
             // on depart chaque sommet est le predecesseur de lui-même
@@ -243,30 +256,112 @@ function Ford () {
 
             // pas de traitement
             modifier[node.label] =  false;
-            
         }
 
+        // on fait en sorte que la racine soit toujours à la première itération
+        if (key !== undefined && racine !== undefined) {
+            nodeArray.splice(-1, key)
+            nodeArray.unshift(racine)
+        }
 
         // Itération courante (Etape 2)
         let i = 0
+        while (i < nodeArray.length) {
+            
+            // le sommet courant
+            const node = nodeArray[i]
+            successeurs[node.label] = undefined
+
+            // on cherche tous les successeurs de i courante
+            for (let index = 0; index < edgeArray.length; index++) {
+                const edge = edgeArray[index];
+
+                // on le met dans le tableau de successeurs
+                if (edge.from === node.id && node.id !== edge) {
+                    if (successeurs[node.label] === undefined) {
+                        successeurs[node.label] = []
+                    }
+
+                    successeurs[node.id].push(edge)
+                } 
+            }
+
+            // on calcul du poids (Etape 3)
+            // on verifie si i courante à des successeurs
+            if (successeurs[node.label] !== undefined) {
+                for (let k = 0; k < successeurs[node.label].length; k++) {
+                    const successeur = successeurs[node.label][k];
+
+                    // on compare la valeur i + la ponderation entre i et j(successeur) < au poids(j)
+                    const valeur = (poids[node.label] + successeur.size) 
+                    if (valeur < poids[successeur.to]) {
+                        // VRAI
+                        poids[successeur.to] = valeur
+                        predecesseurs[successeur.to] = node.label
+                        modifier[successeur.to] = true
+                    } else {
+                        modifier[successeur.to] = false
+                    }
+                }
+            }
+
+            i++
+
+
+
+            // on vérifie qu'il n' y a pas des valeurs true (VRAI) (Etape 4)
+            // s'il y a des valeurs TRUE on recommence à zéro en mettant la variable i à 0
+            if (i === nodeArray.length) {
+                for (const key in modifier) {
+                    if (modifier[key] === true) {
+                        i = 0
+                        break
+                    }
+                }
+            }  
+        }
+
+
+        // on affiche les resultats (Etape 5 FIN)
+        let nodeSorting = []
+        let edgeSorting = []
+
+        // 
+        for (const key in predecesseurs) {
+
+        }
+
+
+
         
+
+        
+        childRacine.classList.remove('child-on')
+        childRacine.classList.add('child-off')
+
+        
+        childArc.classList.remove('child-on')
+        childArc.classList.add('child-off')
+
+        
+        childAdd.classList.remove('child-off')
+        childAdd.classList.add('child-on')
+
+        console.log(modifier, predecesseurs, poids);
     }
+
 
 
 }
 /******* FIN *****/
 
 
-/**
- * 
- * @param {DataSet} nodes 
- * @param {DataSet} edges 
- * @returns 
- */
- function change (nodeArray, edges) {
-    // document.querySelector("#nodes").innerHTML = toJSON(nodes.get())
-    // document.querySelector("#edges").innerHTML = toJSON(edges.get())
 
+ function change (nodeArray, edges, views) {
+
+    if (views === undefined) {
+        views = '#view-graphe'
+    }
 
     var nodes =  new vis.DataSet()
     var edges =  new vis.DataSet()
@@ -274,7 +369,7 @@ function Ford () {
     nodes.add(nodeArray)
     edges.add(edgeArray)
     
-    var container = document.querySelector('#view-graphe');
+    var container = document.querySelector(views);
     return new vis.Network(container, {
       nodes:nodes,
       edges:edges
