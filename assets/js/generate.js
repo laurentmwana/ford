@@ -307,8 +307,6 @@ function Ford () {
 
             i++
 
-
-
             // on vérifie qu'il n' y a pas des valeurs true (VRAI) (Etape 4)
             // s'il y a des valeurs TRUE on recommence à zéro en mettant la variable i à 0
             if (i === nodeArray.length) {
@@ -321,20 +319,21 @@ function Ford () {
             }  
         }
 
-
         // on affiche les resultats (Etape 5 FIN)
-        let nodeSorting = []
         let edgeSorting = []
-
-        // 
-        for (const key in predecesseurs) {
-
-        }
-
-
-
         
+        for (const key in predecesseurs) {
+            if (key !== predecesseurs[key]) {
 
+                edgeSorting.push({
+                    from: predecesseurs[key],
+                    to: key,
+                    label: poids[key] + "",
+                    arrows: 'to',
+                    color: "#20cf30"
+                })
+            }
+        }
         
         childRacine.classList.remove('child-on')
         childRacine.classList.add('child-off')
@@ -347,7 +346,7 @@ function Ford () {
         childAdd.classList.remove('child-off')
         childAdd.classList.add('child-on')
 
-        console.log(modifier, predecesseurs, poids);
+        changeResult(nodeArray, edgeSorting)
     }
 
 
@@ -356,22 +355,45 @@ function Ford () {
 /******* FIN *****/
 
 
+/**
+ * 
+ * @param {DataSet} nodesArray 
+ * @param {DataSet} edges 
+ * @returns 
+ */
+ function change (nodesArray, edgesArray) {
 
- function change (nodeArray, edges, views) {
+    let nodes =  new vis.DataSet()
+    let edges =  new vis.DataSet()
 
-    if (views === undefined) {
-        views = '#view-graphe'
-    }
-
-    var nodes =  new vis.DataSet()
-    var edges =  new vis.DataSet()
-
-    nodes.add(nodeArray)
-    edges.add(edgeArray)
+    nodes.add(nodesArray)
+    edges.add(edgesArray)
     
-    var container = document.querySelector(views);
+    let container = document.querySelector('#view-graphe')
     return new vis.Network(container, {
       nodes:nodes,
       edges:edges
+    }, {});
+  }
+
+
+ 
+  function changeResult (nodeSorting, edgeSorting) {
+
+    let sortingNode =  new vis.DataSet()
+    let sortingEdge =  new vis.DataSet()
+
+    // on affiche le resultat dans une div
+    const sorting = document.querySelector('#view-result')
+    sorting.classList.remove('view-off')
+    sorting.classList.add('view-on')
+
+    sortingNode.add(nodeSorting)
+    sortingEdge.add(edgeSorting)
+    
+    let container = document.querySelector('#view-result')
+    return new vis.Network(container, {
+      nodes:sortingNode,
+      edges:sortingEdge
     }, {});
   }

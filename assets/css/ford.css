@@ -353,7 +353,7 @@ button:hover {
 
  .views.view-on {
     display: block;
-    opacity: 0;
+    opacity: 1;
  }
 
 
